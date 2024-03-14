@@ -1,6 +1,7 @@
 int ledVermelho = 5; //ledVermelho
 int ledAmarelo = 6; //ledAmarelo
 int ledVerde = 7; //ledVerde
+int maximo = 835;
 
 int sensorLDR = A5; //sensor de luz
 int buzzerPin = 9; //buzzer
@@ -21,26 +22,25 @@ void setup()
 
 void loop()
 {
-  int leitura = analogRead(sensorLDR);
+  int luz = analogRead(sensorLDR);
+  int leitura = (luz / (float)maximo) * 100;
   Serial.println(leitura);
   
   int Novo = -1; // variavel para rastrear o novo estado
-
-  if (leitura >= 889 && leitura <= 916) { //100% e 80%
-    digitalWrite(ledVermelho, HIGH);
+  
+    digitalWrite(ledVermelho, LOW);
     digitalWrite(ledAmarelo, LOW);
     digitalWrite(ledVerde, LOW);
+  
+  if (leitura >= 80) { //100% e 80%
+    digitalWrite(ledVermelho, HIGH);
     Novo = 3; // estado correspondente ao LED vermelho
   }  
-  else if (leitura > 916 && leitura <= 956) { // 79% e 50%
+  else if (leitura >= 50) { // 79% e 50%
     digitalWrite(ledAmarelo, HIGH);
-    digitalWrite(ledVermelho, LOW);
-    digitalWrite(ledVerde, LOW);
     Novo = 2; // estado correspondente ao LED amarelo
   }
-  else if (leitura > 956) { // 49%
-    digitalWrite(ledAmarelo, LOW);
-    digitalWrite(ledVermelho, LOW);
+  else { // 49%
     digitalWrite(ledVerde, HIGH);
     Novo = 1; // estado correspondente ao LED verde
   }
